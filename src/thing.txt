@@ -1,0 +1,120 @@
+import express from "express";
+
+const app = express();
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+
+
+// Defina um array para armazenar as contas de usuário
+let users = [
+      { "id": 1, name: "Luis Henrique", password: "123456" },
+      { "id": 2, name: "João Carlos", password: "123456" },
+      { "id": 3, name: "Brendo Pereira", password: "123456" },
+      { "id": 4, name: "Marcos Cesar", password: "123456" },
+      { "id": 5, name: "Pedro Junior", password: "123456" }
+];
+
+// Defina um array para armazenar as citações dos usuários
+let quotes = [
+      { "id": 1, quote: "Saber encontrar a alegria na alegria dos outros é o segredo da felicidade.", "userId": 1 },
+      { "id": 2, quote: "A alegria de fazer o bem é a única felicidade verdadeira.", "userId": 2 },
+      { "id": 3, quote: "Ser feliz sem motivo é a mais autêntica forma de felicidade.", "userId": 3 },
+      { "id": 4, quote: "A alegria não está nas coisas, está em nós.", "userId": 4 }
+];
+
+// Rotas para criar usuários
+app.post('/register', (req, res) => {
+  const { username, password } = req.body;
+  const user = { username, password };
+  users.push(user);
+  res.status(201).send(`O usuário '${username}' foi registrado.`);
+});
+
+// Rota para visualizar a conta de um usuário
+app.get('/users/:id', (req, res) => {
+  const userId = req.params.id;
+  const user = users.find(user => user.id === Number(userId));
+  if (!user) {
+    return res.status(404).send({ message: 'Usuário não encontrado' });
+  }
+  res.send(user);
+});
+
+// Rota para atualizar a conta de um usuário
+app.patch('/users/:id', (req, res) => {
+  const userId = req.params.id;
+  const user = users.find(user => user.id === Number(userId));
+  if (!user) {
+    return res.status(404).send({ message: 'Usuário não encontrado' });
+  }
+  // Adicione lógica aqui para verificar se o usuário é o proprietário da conta
+  Object.assign(user, req.body);
+  res.send({ message: 'Conta atualizada com sucesso' });
+});
+
+// Rota para excluir a conta de um usuário
+app.delete('/users/:id', (req, res) => {
+  const userId = req.params.id;
+  const userIndex = users.findIndex(user => user.id === Number(userId));
+  if (userIndex === -1) {
+    return res.status(404).send({ message: 'Usuário não encontrado' });
+  }
+  // Adicione lógica aqui para verificar se o usuário é o proprietário da conta
+  users.splice(userIndex, 1);
+  res.send({ message: 'Conta excluída com sucesso' });
+});
+
+// Rota para publicar citações
+app.post('/quotes', (req, res) => {
+  const quote = req.body;
+  quotes.push(quote);
+  res.status(201).send({ message: 'Citação publicada com sucesso' });
+  });
+
+// Adicione lógica aqui para associar a cíta ao usuário que a publicou (por exemplo, armazenando o ID do usuário na citação)
+
+// Rota para visualizar uma citação
+app.get('/quotes/:id', (req, res) => {
+  const quoteId = req.params.id;
+  const quote = quotes.find(quote => quote.id === Number(quoteId));
+  if (!quote) {
+  return res.status(404).send({ message: 'Citação não encontrada' });
+  }
+  res.send(quote);
+  });
+  
+  // Rota para atualizar uma citação
+  app.patch('/quotes/:id', (req, res) => {
+  const quoteId = req.params.id;
+  const quote = quotes.find(quote => quote.id === Number(quoteId));
+  if (!quote) {
+  return res.status(404).send({ message: 'Citação não encontrada' });
+  }
+  // Adicione lógica aqui para verificar se o usuário é o proprietário da citação
+  Object.assign(quote, req.body);
+  res.send({ message: 'Citação atualizada com sucesso' });
+  });
+  
+  // Rota para excluir uma citação
+  app.delete('/quotes/:id', (req, res) => {
+  const quoteId = req.params.id;
+  const quoteIndex = quotes.findIndex(quote => quote.id === Number(quoteId));
+  if (quoteIndex === -1) {
+  return res.status(404).send({ message: 'Citação não encontrada' });
+  }
+  // Adicione lógica aqui para verificar se o usuário é o proprietário da citação
+  quotes.splice(quoteIndex, 1);
+  res.send({ message: 'Citação excluída com sucesso' });
+  });
+  
+  // Rota para visualizar a listagem de todas as citações, ordenadas por data
+  app.get('/quotes', (req, res) => {
+  // Adicione lógica aqui para ordenar as citações por data
+  res.send(quotes);
+  });
+  
+  app.listen(3000, () => {
+  console.log('API está rodando na porta 3000');
+  });
+

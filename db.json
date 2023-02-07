@@ -1,0 +1,15 @@
+{
+    "users": [
+      { "id": 1, "name": "Luis Henrique", "password": "123456" },
+      { "id": 2, "name": "João Carlos", "password": "123456" },
+      { "id": 3, "name": "Brendo Pereira", "password": "123456" },
+      { "id": 4, "name": "Marcos Cesar", "password": "123456" },
+      { "id": 5, "name": "Pedro Junior", "password": "123456" }
+    ],
+    "quotes": [
+      { "id": 1, "quote": "Saber encontrar a alegria na alegria dos outros é o segredo da felicidade.", "userId": 1 },
+      { "id": 2, "quote": "A alegria de fazer o bem é a única felicidade verdadeira.", "userId": 2 },
+      { "id": 3, "quote": "Ser feliz sem motivo é a mais autêntica forma de felicidade.", "userId": 3 },
+      { "id": 4, "quote": "A alegria não está nas coisas, está em nós.", "userId": 4 }
+    ]
+  }
