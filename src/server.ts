@@ -75,16 +75,8 @@ app.delete('/users/:id', async (req, res) => {
 // Quotes 
 
 // Create Quote
-app.post('/quotes', async (req, res) => {
-    const quote = await prisma.user.create({
-        data: {
-          email: 'elsa@prisma.io',
-          name: 'Elsa Prisma',
-        },
-      })
+   
 
-    res.json(quote)
-})
 
 
 app.listen(3000, () => {

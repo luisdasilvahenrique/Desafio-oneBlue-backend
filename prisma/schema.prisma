@@ -16,11 +16,12 @@ model User {
 }
 
 model Quote {
-  id      Int    @id @default(autoincrement())
-  phrase  String
-  user    User   @relation(fields: [user_id], references: [id])
-  user_id Int
-  like    Like[]
+  id         Int      @id @default(autoincrement())
+  phrase     String
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  like       Like[]
 }
 
 model Like {
