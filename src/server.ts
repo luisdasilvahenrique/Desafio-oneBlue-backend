@@ -83,7 +83,7 @@ app.post("/quotes", async (req, res) => {
                 phrase: phrase,
                 user: {
                     connect: {
-                        id: 4
+                        id: 3,
                     },
                 },
             },
@@ -111,12 +111,14 @@ app.delete("/quote/:id", async (req, res) => {
   }
 });
 
+
+
 // Visualizar listagem de todas as citações de todos usuários, ordenadas por data
 app.get('/quotes', async (req, res) => {
     try {
       const quote = await prisma.quote.findMany({
         orderBy: {
-          phrase: 'asc'
+          phrase: 'desc',
         },
         include: {
           user: true
