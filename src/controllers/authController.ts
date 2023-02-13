@@ -19,7 +19,7 @@ async function register(req, res) {
       data: { email, name, password: encryptedPassword },
     });
 
-    const token = sign({ user_id: user.id, email }, "123456789", {
+    const token = sign({ id: user.id, email }, "123456789", {
       expiresIn: "2h",
     });
 
@@ -48,49 +48,55 @@ async function login(req, res) {
       },
     });
     if (user && (await compare(password, user.password))) {
-      const token = sign({ user_id: user.id, email }, "123456789", {
+      const token = sign({ id: user.id, email }, "123456789", {
         expiresIn: "2h",
       });
-      res.json({token});
+      res.json({ token });
     }
   } catch (error) {
-    res.status(500).json(error)
+    res.status(500).json(error);
   }
 }
 
-// Update User { email or name }
-// app.put('/users/:id', async (req, res) => {
-//     try {
-//         const user = await prisma.user.update({
-//             where: {
-//                 id: Number(req.params.id),
-//             },
-//             data: req.body
-//         })
-//         res.json(user)
-//     } catch (error) {
-//         res.status(500).json('Error ao atualizar!')
-//     }
-// })
+async function updateUser(req, res) {
+  const auth = req.user;
+  console.log(auth);
+  if (!auth) {
+    return res.status(401).json({ error: "Não autorizado!" });
+  }
+  try {
+    const user = await prisma.user.update({
+      where: {
+        id: Number(auth.id),
+      },
+      data: req.body,
+    });
+    res.json(user);
+  } catch (error) {
+    res.status(500).json("Error ao atualizar!");
+  }
+}
 
-// // Show user
-// app.get("/users/:id", async (req, res) => {
-//     try {
-//         const user = await prisma.user.findUnique({
-//             where: { id: Number(req.params.id) },
-//         });
+// // List user
+async function listUser(req, res) {
+    const auth = req.user;
+    if(!auth){
+        return res.status(401).json({ error: "Não autorizado!" });
+    }
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: Number(auth.id) },
+    });
 
-//         if (!user)
-//             res.status(404).json({
-//                 error: "Usuário não encontrado",
-//             });
-//         else
-//             res.json(user);
-
-//     } catch (error) {
-//         res.status(500).json({ error: "Error ao vizualizar usuário!" });
-//     }
-// });
+    if (!user)
+      res.status(404).json({
+        error: "Usuário não encontrado",
+      });
+    else res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: "Error ao vizualizar usuário!" });
+  }
+}
 
 // // Delete User
 // app.delete('/users/:id', async (req, res) => {
@@ -104,5 +110,8 @@ async function login(req, res) {
 //     }
 // })
 
-
-export default {register, login}
+export default { 
+    register, 
+    login, 
+    updateUser, 
+    listUser };
