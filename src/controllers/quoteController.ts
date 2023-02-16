@@ -1,25 +1,30 @@
-// Create Quote
-// app.post("/quotes", async (req, res) => {
-//     try {
-//         const { phrase } = req.body;
-//         const quotes = await prisma.quote.create({
-//             data: {
-//                 phrase: phrase,
-//                 user: {
-//                     connect: {
-//                         id: 3,
-//                     },
-//                 },
-//             },
-//             include: {
-//                 user: true
-//             }
-//         });
-//         res.status(201).json(quotes);
-//     } catch (error) {
-//         res.status(500).json({ error: "Erro na criação da citação!" });
-//     }
-// });
+import { PrismaClient, Prisma } from '@prisma/client';
+import { app } from "../server";
+
+const prisma = new PrismaClient();
+
+//Create Quote
+app.post("/quotes", async (req, res) => {
+    try {
+        const { phrase } = req.body;
+        const quotes = await prisma.quote.create({
+            data: {
+                phrase: phrase,
+                user: {
+                    connect: {
+                        id: 3,
+                    },
+                },
+            },
+            include: {
+                user: true
+            }
+        });
+        res.status(201).json(quotes);
+    } catch (error) {
+        res.status(500).json({ error: "Erro na criação da citação!" });
+    }
+});
 
 // // Excluir uma citação
 // app.delete("/quotes/:id", async (req, res) => {
