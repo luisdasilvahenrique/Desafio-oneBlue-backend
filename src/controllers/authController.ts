@@ -5,6 +5,8 @@ import { hash, compare } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
+// [X]
+// Register user
 async function register(req, res) {
   try {
     const { email, name, password } = req.body;
@@ -19,7 +21,7 @@ async function register(req, res) {
       data: { email, name, password: encryptedPassword },
     });
 
-    const token = sign({ id: user.id, email }, "123456789", {
+    const token = sign({ id: user.id, email }, req.body.password , { //"123456789"
       expiresIn: "2h",
     });
 
@@ -36,6 +38,8 @@ async function register(req, res) {
   }
 }
 
+// [X]
+// Login user
 async function login(req, res) {
   try {
     const { email, password } = req.body;
@@ -48,7 +52,7 @@ async function login(req, res) {
       },
     });
     if (user && (await compare(password, user.password))) {
-      const token = sign({ id: user.id, email }, "123456789", {
+      const token = sign({ id: user.id, email }, req.body.password, { // "123456789"
         expiresIn: "2h",
       });
       res.json({ token });
@@ -58,9 +62,10 @@ async function login(req, res) {
   }
 }
 
+// [X]
+// Update user
 async function updateUser(req, res) {
   const auth = req.user;
-  console.log(auth);
   if (!auth) {
     return res.status(401).json({ error: "Não autorizado!" });
   }
@@ -77,12 +82,10 @@ async function updateUser(req, res) {
   }
 }
 
-// // List user
+// [X]
+// List user
 async function listUser(req, res) {
-    const auth = req.user;
-    if(!auth){
-        return res.status(401).json({ error: "Não autorizado!" });
-    }
+  const auth = req.user;
   try {
     const user = await prisma.user.findUnique({
       where: { id: Number(auth.id) },
@@ -98,20 +101,24 @@ async function listUser(req, res) {
   }
 }
 
-// // Delete User
-// app.delete('/users/:id', async (req, res) => {
-//     try {
-//         const user = await prisma.user.delete({
-//             where: { id: Number(req.params.id) }
-//         })
-//         res.json(user)
-//     } catch (error) {
-//         res.status(500).json({error: 'Error ao deletar o usuário!'})
-//     }
-// })
+// [x] in progress
+// Delete User
+async function deleteUser(req, res) {
+  const auth = req.user;
+  try {
+    const user = await prisma.user.delete({
+      where: { id: Number(auth.id) }
+    })
+    res.status(202).json(user)
+  } catch (error) {
+    res.status(500).json({ error: 'Error ao deletar o usuário!' })
+  }
+}
 
-export default { 
-    register, 
-    login, 
-    updateUser, 
-    listUser };
+export default {
+  register,
+  login,
+  updateUser,
+  listUser,
+  deleteUser
+};
