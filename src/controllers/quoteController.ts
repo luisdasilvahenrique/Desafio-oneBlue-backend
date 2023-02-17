@@ -12,7 +12,7 @@ app.post("/quotes", async (req, res) => {
                 phrase: phrase,
                 user: {
                     connect: {
-                        id: 3,
+                        id: 4,
                     },
                 },
             },
