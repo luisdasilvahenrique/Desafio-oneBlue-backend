@@ -1,9 +1,4 @@
 # **Teste NodeJS - Backend Developer** 
-
-<img src="https://i.imgur.com/BssBbbX.png" />
-
-<hr>
-
 ### Desenvolver uma RESTful API
 
 #### Premissas
